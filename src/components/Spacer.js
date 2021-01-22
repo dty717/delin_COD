@@ -7,7 +7,11 @@ const Spacer = ({children})=>{
     </View>
 }
 const styles=StyleSheet.create({
-    spacer:{margin:15}
+    spacer:{
+        margin:15,
+        justifyContent:'center',
+        flex:1
+    }
 })
 
 export default Spacer

@@ -5,6 +5,10 @@ const User = mongoose.model('User');
 
 const router = express.Router();
 
+router.get('/test', (req, res) => {
+  res.send("123test");
+});
+
 router.post('/signup', async (req, res) => {
   const { username, password } = req.body;
 
@@ -19,9 +23,13 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-router.post('/signin', async (req, res) => {
-  const { username, password } = req.body;
-
+router.all('/signin', async (req, res) => {
+  var { username, password } = req.body;
+  if (!username || !password) {
+    username = req.query.username;
+    password = req.query.password;
+  }
+  console.log(username, password)
   if (!username || !password) {
     return res.status(422).send({ error: 'Must provide username and password' });
   }

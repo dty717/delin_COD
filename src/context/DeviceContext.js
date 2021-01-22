@@ -2,7 +2,9 @@ import trackerApi from '../api/tracker';
 import createDataContext from './createDataContext'
 import "../navigationRef"
 import { navigate } from '../navigationRef';
+
 import {AsyncStorage} from 'react-native'
+
 
 var storage;
 if(typeof AsyncStorage=='undefined'){
@@ -10,9 +12,11 @@ if(typeof AsyncStorage=='undefined'){
 }else{
     storage = AsyncStorage
 }
-
-const authReducer = (state,action)=>{
+const DeviceReducer = (state,action)=>{
+    
     switch(action.type){
+        case 'updateDeviceData':
+            return {...state,data:action.payload.data};
         case 'add_error':
             return{...state,errorMessage:action.payload}
         case 'signup':
@@ -28,6 +32,14 @@ const authReducer = (state,action)=>{
     }
 };
 
+const updateDeviceData = (dispatch) => async (data) => {
+    try {
+        dispatch({ type: 'updateDeviceData', payload: {data} });
+    } catch (error) {
+        //dispatch({ type: 'add_error', payload: 'Something went wrong!' })
+    }
+}
+
 const signup = (dispatch) => async ({ username, password }) => {
     try {
         const response = await trackerApi.post('/signup', { username, password });
@@ -42,7 +54,6 @@ const signup = (dispatch) => async ({ username, password }) => {
     }
 }
 
-
 const signin = (dispatch)=> async ({ username, password }) => {
     try {
         const response = await trackerApi.post('/signin', { username, password });
@@ -51,13 +62,13 @@ const signin = (dispatch)=> async ({ username, password }) => {
             'token',
             response.data.token
         );
-
         dispatch({ type: 'signin', payload: response.data.token})
-        navigate('主页');
+        navigate('TrackList');
     } catch (error) {
         dispatch({ type: 'add_error', payload: 'Something went wrong!' })
     }
 }
+
 const signout = (dispatch)=>{
     return async ()=>{
         await storage.removeItem('token');
@@ -65,24 +76,23 @@ const signout = (dispatch)=>{
         navigate('loginFlow')
     };
 }
+
 const clearErrorMessage = (dispatch) => () => {
     dispatch({ type: 'clear_error_message' })
 }
 
 const tryLocalSignin = (dispatch)=>()=>{
     const token =storage.getItem('token');
-    alert(JSON.stringify(token));
     if(token){
         dispatch({type:'signin',payload:token});
-        navigate('设备信息')
+        navigate('主页')
     }else{
         navigate('loginFlow')
     }
 }
 
-
 export const {Provider,Context} = createDataContext(
-    authReducer,
-    {signin,signup,signout,clearErrorMessage,tryLocalSignin},
-    {token:null,errorMessage:''}
+    DeviceReducer,
+    {signin,signup,signout,clearErrorMessage,tryLocalSignin,updateDeviceData},
+    {data:{dataFlow1:["1,1","2,2","3,3"],dataFlow2:["1,1","2,2","3,3"],dataFlow3:["1,1","2,2","3,3"]}}
 )
