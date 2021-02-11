@@ -3,12 +3,10 @@ import {StyleSheet,Dimensions } from 'react-native'
 import { Button, Text, Input } from 'react-native-elements'
 import { SafeAreaView } from 'react-navigation'
 import Spacer from '../components/Spacer'
-import {Context as AuthContext} from "../context/AuthContext"
+import {Context as HistoryContext} from "../context/HistoryContext"
 import {Context as DeviceContext} from "../context/DeviceContext"
 import {Context as ParamContext} from "../context/ParamContext"
 import LineChart_data from "../components/LineChart_data"
-import { View } from 'react-native'
-import { TextInput } from 'react-native'
 import MainHeader from '../components/MainHeader'
 
 const window = Dimensions.get('window');
@@ -22,7 +20,10 @@ var __dataFlow3 = []
 var start = -300
 var end = 350;
 var dataLen = end-start;
+
+
 setInterval(function(){
+
     return;
     if(_updateDeviceData){
 
@@ -97,8 +98,9 @@ setInterval(function(){
 },1000)
 
 const MainScreen = ()=>{
-    var [_abc,_setABC] = useState(0);
     var {state,updateDeviceData}= useContext(DeviceContext);
+    var {state}= useContext(DeviceContext);
+    var history = useContext(HistoryContext);
     var param= useContext(ParamContext);
     useEffect(()=>{
         //updateDeviceData({dataFlow:[1,2,3,4]});
@@ -116,14 +118,15 @@ const MainScreen = ()=>{
         _windowWidth = dimensions.window.width;
         Dimensions.addEventListener('change', onChange);
         return () => {
-        Dimensions.removeEventListener('change', onChange);
+            Dimensions.removeEventListener('change', onChange);
         };
     });
-
+    console.log(history.state.historyData[0])
     return (
         <SafeAreaView forceInset={{ top: 'always' }} style={styles.container}>
-            <MainHeader>
-
+            <MainHeader text1 = {history.state.historyData[0]?history.state.historyData[0].state+"":""} textChange1 ={()=>{}} 
+                text2 = {history.state.historyData[0]?history.state.historyData[0].COD+"":""} textChange2 ={()=>{}} 
+                text3 = {param.state.蒸馏水光电压+""} textChange3 ={()=>{}} >
             </MainHeader>
             <LineChart_data data1={state.data.dataFlow1}
                 data2={state.data.dataFlow2} data3={state.data.dataFlow3}>

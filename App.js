@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { createAppContainer, createSwitchNavigator} from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
@@ -8,6 +8,7 @@ import SigninScreen from "./src/screen/SigninScreen";
 import SignupScreen from "./src/screen/SignupScreen";
 import {Provider as AuthProvider} from "./src/context/AuthContext"
 import {Provider as DeviceProvider} from "./src/context/DeviceContext"
+import {Provider as HistoryProvider} from "./src/context/HistoryContext"
 import {setNavigator} from './src/navigationRef';
 import ResolveAuthScreen from './src/screen/ResolveAuthScreen';
 import MainScreen from './src/screen/MainScreen';
@@ -37,7 +38,9 @@ export default ()=>{
    <AuthProvider>
      <ParamProvider>
       <DeviceProvider>
-        <App ref={(navigator)=>{setNavigator(navigator)}} style = {{flex:1}}/>
+        <HistoryProvider>
+          <App ref={(navigator)=>{setNavigator(navigator)}} style = {{flex:1}}/>
+        </HistoryProvider>
       </DeviceProvider>
      </ParamProvider>
     </AuthProvider>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useContext } from 'react'
 import { Picker } from 'react-native'
 //import { Picker } from 'react-native'
@@ -10,42 +10,47 @@ import Spacer from '../components/Spacer'
 import Text_Input_Button from '../components/Text_Input_Button'
 import Text_State_Button_Button from '../components/Text_State_Button_Button'
 import 质控样样式 from '../components/质控样样式'
-import {Context as AuthContext} from "../context/AuthContext"
+import {Context as DeviceContext} from "../context/DeviceContext"
 import {Context as ParamContext} from "../context/ParamContext"
 
+
 const DeviceControlScreen = ()=>{
-    const {signout} = useContext(AuthContext);
     var param= useContext(ParamContext);
-    var [做样数量,设置做样数量]  = useState(param.state.做样数量);
-    var [空白样数量,设置空白样数量]  = useState(param.state.空白样数量);
-    var [起始消解管号,设置起始消解管号]  = useState(param.state.起始消解管号);
-    var [质控样1,设置质控样1]  = useState(param.state.质控一标号);
-    var [质控样2,设置质控样2]  = useState(param.state.质控二标号);
-    
+    var device = useContext(DeviceContext);
+    var paramState = param.state;
+    var deviceID ="COD_A_00001";
     return (
         <SafeAreaView forceInset={{top:'always'}} style = {{flex:1,marginTop:20}}>
             <ScrollView>
-            <Text_Input_Button text = "做样数量" textInput={做样数量} textInputChange ={设置做样数量}  buttonText ="设置" buttonCall ={()=>{param.updateParamData("做样数量",做样数量);}}>
+            <Text_Input_Button text = "做样数量" textInput={paramState.做样数量+""} textInputChange ={(e)=>{param.updateParamData(deviceID,"做样数量",e);}} textEndEditing = {(e)=>{param.uploadParamData(deviceID, "做样数量",e.nativeEvent.text);}}  >
             </Text_Input_Button>
-            <Text_Input_Button text = "空白样数量" textInput={空白样数量} textInputChange ={设置空白样数量}  buttonText ="设置" buttonCall ={()=>{param.updateParamData("空白样数量",空白样数量);}}>
+            <Text_Input_Button text = "空白样数量" textInput={paramState.空白样数量+""} textInputChange ={(e)=>{param.updateParamData(deviceID,"空白样数量",e)}} textEndEditing = {(e)=>{param.uploadParamData(deviceID, "空白样数量",e.nativeEvent.text);}}>
             </Text_Input_Button>
-            <Text_Input_Button text = "起始消解管号" textInput={起始消解管号} textInputChange ={设置起始消解管号}  buttonText ="设置" buttonCall ={()=>{param.updateParamData("起始消解管号",起始消解管号);}}>
+            <Text_Input_Button text = "起始消解管号" textInput={paramState.起始消解管号+""} textInputChange ={(e)=>{param.updateParamData(deviceID, "起始消解管号",e)}} textEndEditing = {(e)=>{param.uploadParamData(deviceID, "起始消解管号",e.nativeEvent.text);}}>
             </Text_Input_Button>
             <View style={{marginTop:20}}>
-                <质控样样式 text = "质控样1" textInput={质控样1} textInputChange ={(e)=>{设置质控样1(e);param.updateParamData("质控一标号",e);}}  buttonText ={param.state.质控一启用?"启用中":"弃用中"} buttonCall ={()=>{param.toggleParamData("质控一启用");}}>
+                <质控样样式 text = "质控样1" textInput={paramState.质控一标号+""} textInputChange ={(e)=>{param.updateParamData(deviceID, "质控一标号",e);}}  
+                    textEndEditing = {(e)=>{param.uploadParamData(deviceID, "质控一标号",e.nativeEvent.text);}}  
+                    text2 = "浓度" textInput2={paramState.质控一浓度+""} textInputChange2 ={(e)=>{param.updateParamData(deviceID, "质控一浓度",e);}}
+                    textEndEditing2 = {(e)=>{param.uploadParamData(deviceID, "质控一浓度",e.nativeEvent.text);}}  
+                    buttonText ={paramState.质控一启用?"启用中":"弃用中"} buttonCall ={()=>{param.toggleParamData(deviceID,"质控一启用");}}>
                 </质控样样式>
-                <质控样样式 text = "质控样2" textInput={质控样2} textInputChange ={(e)=>{设置质控样2(e);param.updateParamData("质控二标号",e);}}  buttonText ={param.state.质控二启用?"启用中":"弃用中"} buttonCall ={()=>{param.toggleParamData("质控二启用");}}>
+                <质控样样式 text = "质控样2" textInput={paramState.质控二标号+""} textInputChange ={(e)=>{param.updateParamData(deviceID, "质控二标号",e);}}
+                    textEndEditing = {(e)=>{param.uploadParamData(deviceID, "质控二标号",e.nativeEvent.text);}}  
+                    text2 = "浓度" textInput2={paramState.质控二浓度+""} textInputChange2 ={(e)=>{param.updateParamData(deviceID, "质控二浓度",e);}}
+                    textEndEditing2 = {(e)=>{param.uploadParamData(deviceID, "质控二浓度",e.nativeEvent.text);}}  
+                    buttonText ={paramState.质控二启用?"启用中":"弃用中"} buttonCall ={()=>{param.toggleParamData(deviceID,"质控二启用");}}>
                 </质控样样式>
             </View>
-            <Text_State_Button_Button text = "自动做样" stateColor="green" buttonText1 = "启动" buttonCall1 = {()=>{}} buttonText2 = "停止" buttonCall2 = {()=>{}}> 
+            <Text_State_Button_Button text = "自动做样" stateColor="green" buttonText1 = "启动" buttonCall1 = {()=>{device.controlDevice(deviceID,"start")}} buttonText2 = "停止" buttonCall2 = {()=>{device.controlDevice(deviceID,"stop")}}> 
             </Text_State_Button_Button>
             <View style ={styles.picker}>
                 <View style = {styles.text}>
                     <Text style={{fontSize:18}}>初始量程选择</Text>
                 </View>
                 <Picker
-                    selectedValue={param.state.采样运行模式}
-                    onValueChange={e =>{param.updateParamData("采样运行模式",e);}}
+                    selectedValue={paramState.采样运行模式}
+                    onValueChange={e =>{param.uploadParamData(deviceID, "采样运行模式",e);}}
                     style={{ width: 160 ,marginHorizontal:40, borderWidth:1}}
                     mode="dropdown">
                     <Picker.Item label="低浓度" value={0} />

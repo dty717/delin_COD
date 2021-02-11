@@ -4,18 +4,18 @@ import {View,StyleSheet} from "react-native"
 import { Button, Text} from 'react-native-elements'
 import Spacer from './Spacer'
 
-const Text_Input_Button = ({text,textInput,textInputChange,buttonText,buttonColor,buttonCall})=>{
+const Text_Input_Button = ({text,textInput,textInputChange,textEndEditing,buttonText,buttonColor,buttonCall})=>{
     return (<View style ={styles.container}>
         <View style = {styles.text}>
             <Text style={{fontSize:18}}>{text}</Text>
         </View>
-        < TextInput  style = {styles.textInput} value ={textInput} onChangeText={textInputChange}  />
-        <View style={styles.button}>
+        < TextInput  style = {styles.textInput} value ={textInput} onChangeText={textInputChange} onEndEditing = {textEndEditing} />
+        {buttonText?(<View style={styles.button}>
             {buttonColor?
                 <Button title={buttonText} onPress={buttonCall} buttonStyle = {{backgroundColor:buttonColor}}></Button>
                 :<Button title={buttonText} onPress={buttonCall}></Button>
             }
-        </View>
+        </View>):null}
     </View>)
 }
 const styles=StyleSheet.create({

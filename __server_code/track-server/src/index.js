@@ -1,10 +1,18 @@
 require('./models/User');
 require('./models/Track');
+require('./models/History');
+require('./models/DeviceState');
+require('./models/Param');
+require('./middlewares/server');
+
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const authRoutes = require('./routes/authRoutes');
 const trackRoutes = require('./routes/trackRoutes');
+const historyRouters = require('./routes/historyRouters');
+const deviceRouters = require('./routes/deviceRouters');
+const paramRouters = require('./routes/paramRouters');
 const requireAuth = require('./middlewares/requireAuth');
 var cors = require('cors')
 
@@ -13,6 +21,9 @@ const app = express();
 app.use(cors())
 app.use(bodyParser.json());
 app.use(authRoutes);
+app.use(historyRouters);
+app.use(deviceRouters);
+app.use(paramRouters);
 app.use(trackRoutes);
 
 const mongoUri = 'mongodb+srv://admin:d52180362@cluster0.pdmvx.mongodb.net/<dbname>?retryWrites=true&w=majority';

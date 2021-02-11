@@ -2,14 +2,15 @@ import React from 'react'
 import {View,StyleSheet, TextInput} from "react-native"
 import { Button, Text } from 'react-native-elements'
 
-const MainHeader = ({})=>{
+const MainHeader = ({text1,textChange1,text2,textChange2,text3,textChange3})=>{
+    
     return (
         <View>
         <View style={styles.row}>
             <View style = {styles.text}>
                 <Text style={{fontSize:18}}>状态</Text>
             </View>
-            <TextInput  style={styles.textInput} />
+            <TextInput  style={styles.textInput} value = {text1} onChangeText = {textChange1}/>
             <View style = {styles.text2}>
                 <Text style={{fontSize:18}}></Text>
             </View>
@@ -18,7 +19,7 @@ const MainHeader = ({})=>{
             <View style = {styles.text}>
                 <Text style={{fontSize:18}}>滴定数据</Text>
             </View>
-            <TextInput  style={styles.textInput} />
+            <TextInput  style={styles.textInput}  value = {text2} onChangeText = {textChange2}/>
             <View style = {styles.text2}>
                 <Text style={{fontSize:18}}>mg/L</Text>
             </View>
@@ -27,7 +28,7 @@ const MainHeader = ({})=>{
             <View style = {styles.text}>
                 <Text style={{fontSize:18}}>蒸馏水光电压</Text>
             </View>
-            <TextInput  style={styles.textInput} />
+            <TextInput  style={styles.textInput}  value = {text3} onChangeText = {textChange3}/>
             <View style = {styles.text2}>
                 <Text style={{fontSize:18}}></Text>
             </View>

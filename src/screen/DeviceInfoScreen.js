@@ -6,13 +6,20 @@ import { Button } from 'react-native-elements'
 import { SafeAreaView } from 'react-navigation'
 import DeviceStateDate from '../components/DeviceStateDate'
 import Spacer from '../components/Spacer'
+import {Context as DeviceContext }from '../context/DeviceContext'
+
+
 
 const DeviceInfoScreen = () => {
     var list = [1, 2, 3, 4, 1, 2, 3, 41, 2, 3, 41, 2, 3, 41, 2, 3, 41, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 41, 2, 3, 41, 2, 3, 41, 2, 3, 41, 2, 3, 41, 2, 3, 4, 1, 2, 3, 41, 2, 3, 41, 2, 3, 41, 2, 3, 41, 2, 3, 41, 2, 3, 4, 1, 2, 3, 41, 2, 3, 41, 2, 3, 41, 2, 3, 41, 2, 3, 4]
+    const {state} = useContext(DeviceContext);
+    console.log(state)
     return (
         <SafeAreaView forceInset={{ top: 'always' }} style={{ flex: 1 }}>
-            <FlatList data={list} renderItem={({ item }) => {
-                return <DeviceStateDate 名称="名称" 状态="状态">
+            <DeviceStateDate index="名称" val="状态" header={true}>
+                </DeviceStateDate>
+            <FlatList data={state.deviceState} renderItem={({ index,item}) => {
+                return <DeviceStateDate index={index} val={item}>
                 </DeviceStateDate>
             }}>
 

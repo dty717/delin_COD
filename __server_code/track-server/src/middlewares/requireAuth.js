@@ -4,7 +4,6 @@ const User = mongoose.model('User');
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
-  console.log(req.headers)
   // authorization === 'Bearer laksjdflaksdjasdfklj'
 
   if (!authorization) {

@@ -2,17 +2,26 @@ import trackerApi from '../api/tracker';
 import createDataContext from './createDataContext'
 import "../navigationRef"
 import { navigate } from '../navigationRef';
-import { AsyncStorage } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 var storage;
-if (typeof AsyncStorage == 'undefined') {
-    storage = localStorage;
-} else {
+if(typeof AsyncStorage=='undefined'){
+    try {
+        storage = localStorage;
+    } catch (error) {
+        storage = AsyncStorage
+    }
+}else{
     storage = AsyncStorage
 }
 
-function initParam() {
-    var _initParam = storage.getItem('@param');
-    console.log(_initParam);
+/*
+ 
+*/
+async function _init_param(_initParam){
+    if(_initParam){
+        _initParam = await JSON.parse(_initParam);
+    }
     if ((!_initParam)||!_initParam.valid) {
         _initParam = {
             valid:true,
@@ -195,15 +204,12 @@ function initParam() {
             高浓度A_快速体积: "高浓度A_快速体积"
         }
         storage.setItem('@param',JSON.stringify(_initParam));
-        console.log("init")
     }else{
-        try {
-            _initParam = JSON.parse(_initParam)
-        } catch (error) {
-        }
     }
     return _initParam;
+
 }
+
 const _type = {
     I0: "I0",
     Ab: "Ab",
@@ -388,24 +394,54 @@ const _type = {
 
 const ParamReducer = (state, action) => {
     switch (action.type) {
+        case 'getParamData':
+            storage.setItem('@param',JSON.stringify(action.payload));
+            var _state = action.payload;
+            return _state;
         case 'updateParamData':
             var _state = { ...state };
             _state[action.payload.key] = action.payload.value;
-            //storage.setItem('param',JSON.stringify(_state));
+            //storage.setItem('@param',JSON.stringify(_state));
             return _state;
         case 'toggleParamData':
             var _state = { ...state };
             _state[action.payload] = !_state[action.payload];
-            //storage.setItem('param',JSON.stringify(_state));
+            storage.setItem('@param',JSON.stringify(_state));
+            return _state;
+        case 'uploadParamData':
+            console.log(_state)
+            var _state = action.payload;
+            //storage.setItem('@param',JSON.stringify(action.payload));
+            return _state;
+        case 'initParam':
+            var _state = action.payload;
             return _state;
         default:
             return state;
     }
 };
 
-const updateParamData = (dispatch) => async (key, value) => {
+const updateParamData = (dispatch)=>async(deviceID,key,value)=>{
     try {
-        dispatch({ type: 'updateParamData', payload: { key, value } });
+        //trackerApi.post('/updateParamData',{deviceID,key,value});
+        dispatch({ type: 'updateParamData', payload: {key,value} });
+    } catch (error) {
+        //dispatch({ type: 'add_error', payload: 'Something went wrong!' })
+    }
+}
+
+const uploadParamData = (dispatch)=>async(deviceID,key,value)=>{
+    try {
+        var response = await trackerApi.post('/uploadParamData',{deviceID,key,value});
+        dispatch({ type: 'uploadParamData', payload: response.data });
+    } catch (error) {
+        //dispatch({ type: 'add_error', payload: 'Something went wrong!' })
+    }
+}
+const getParamData = (dispatch) => async (deviceID) => {
+    try {
+        var response = await trackerApi.post('/Params',{deviceID});
+        dispatch({ type: 'getParamData', payload: response.data });
     } catch (error) {
         //dispatch({ type: 'add_error', payload: 'Something went wrong!' })
     }
@@ -420,8 +456,18 @@ const toggleParamData = (dispatch) => async (value) => {
 }
 
 
+
+const initParam = (dispatch) => async(val)=>{
+    try {
+        val =await _init_param(val);
+        dispatch({ type: 'initParam',payload : val});
+    } catch (error) {
+        //dispatch({ type: 'add_error', payload: 'Something went wrong!' })
+    }
+}
+
+
 export const { Provider, Context } = createDataContext(
     ParamReducer,
-    { toggleParamData, updateParamData },
-    initParam()
-)
+    { toggleParamData, getParamData ,initParam,updateParamData,uploadParamData}
+)   

@@ -29,6 +29,7 @@ router.all('/signin', async (req, res) => {
     username = req.query.username;
     password = req.query.password;
   }
+  
   console.log(username, password)
   if (!username || !password) {
     return res.status(422).send({ error: 'Must provide username and password' });
