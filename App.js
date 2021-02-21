@@ -9,13 +9,14 @@ import SignupScreen from "./src/screen/SignupScreen";
 import {Provider as AuthProvider} from "./src/context/AuthContext"
 import {Provider as DeviceProvider} from "./src/context/DeviceContext"
 import {Provider as HistoryProvider} from "./src/context/HistoryContext"
+import {Provider as ParamProvider} from "./src/context/ParamContext"
 import {setNavigator} from './src/navigationRef';
+
 import ResolveAuthScreen from './src/screen/ResolveAuthScreen';
 import MainScreen from './src/screen/MainScreen';
 import DeviceControlScreen from './src/screen/DeviceControlScreen';
 import HistoryScreen from './src/screen/HistoryScreen';
 import DeviceInfoScreen from './src/screen/DeviceInfoScreen';
-import {Provider as ParamProvider} from "./src/context/ParamContext"
 
 const switchNavigator = createSwitchNavigator({
   resolveAuth:ResolveAuthScreen,
