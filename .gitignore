@@ -11,3 +11,7 @@ web-build/
 package-lock.json
 # macOS
 .DS_Store
+ios/
+ios/*
+android/
+android/*
