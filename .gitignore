@@ -13,5 +13,7 @@ package-lock.json
 .DS_Store
 ios/
 ios/*
+ios/**/*
 android/
 android/*
+android/**/*
