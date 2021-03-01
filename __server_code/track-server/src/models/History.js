@@ -11,7 +11,6 @@ const historySchema = new mongoose.Schema({
     },
     sampleInfo:{
         type:String,
-        required:true
     },
     sampleId:{
         type:Number,
@@ -43,7 +42,6 @@ const historySchema = new mongoose.Schema({
     },
     dataInfo:{
         type:String,
-        required:true
     }
 
 })

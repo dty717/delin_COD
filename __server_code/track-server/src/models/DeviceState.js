@@ -10,8 +10,13 @@ const deviceStateSchema = new mongoose.Schema({
     deviceState:{
         type:Array,
         require:true
+    },
+    lastHistory:{
+        type:Date
+    },
+    lastUpdate:{
+        type:Date
     }
-
 })
 
 mongoose.model('DeviceState', deviceStateSchema);

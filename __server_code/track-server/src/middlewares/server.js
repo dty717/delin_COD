@@ -16,23 +16,46 @@ const server = net.createServer((c) => {
   console.log(c.address());
 
   clients.push({client:c,deviceID:"",control:false,set:false});
-  
+  var bigDatas = [];
+  var bigDatasSum = 0;
+  var bigDatasIndex = 0;
   c.on('data',(e)=>{
     try {
-      var recs = new String(e);
+      
+      var recs;
+      if(bigDatasSum>0){
+        bigDatasIndex += e.length;
+        bigDatas = bigDatas.concat(e)
+        if(bigDatasIndex<bigDatasSum){
+          return;
+        }
+        recs = new String(bigDatas);
+      }else{
+        recs = new String(e);
+      }
       var indexSplit = recs.indexOf(':')
       if(indexSplit!=-1){
         recs = [recs.substring(0,indexSplit),recs.substring(indexSplit+1)];
       }
+      if(bigDatasSum>0){
+        bigDatasIndex = 0;
+        bigDatasSum=0;
+        bigDatas = [];
+      }else{
+        if((parseInt(recs[0])>=100)&&(parseInt(recs[0])>(e.length-recs[0].length-1))){
+          bigDatasSum = parseInt(recs[0])
+          return;
+        }
+      }
       if(parseInt(recs[0])==(e.length-recs[0].length-1)){
         var res = JSON.parse(recs[1].toString().replace(/"False"/g,"false").replace(/"True"/g,"true"));
-
         if(res.type){
           handleClient(res.type,res.data,c);
         }
       }
     } catch (error) {
       console.log(error)
+      console.log(new String(e))
     }
   })
   c.on('close', () => {
@@ -104,10 +127,7 @@ function deleteItem(c){
   }
 }
 var clients = [];
-
-
 const handleClient = async (type,data,client)=>{
-  console.log(type);
   if(type == "login"){
     if (!data.username || !data.password) {
       return client.write(addHeader({ type,error: 'Must provide username and password' }));
@@ -133,33 +153,55 @@ const handleClient = async (type,data,client)=>{
       if (err) {
         return { error: 'You must be logged in.' };
       }
-  
       const { userId } = payload;
-  
       const user = await User.findById(userId);
       if(user){
         switch (type) {
           case "deviceID":
             clients[indexClient(client)].deviceID = data.deviceID;
-            var device = await DeviceState.find({deviceID:data.deviceID});
+            var device = await DeviceState.findOne({deviceID:data.deviceID});
             if(device.length == 0){
               return client.write(addHeader({ type,error:"device not register"}));
-                //await new DeviceState({deviceID:data.deviceID,deviceState:[]}).save()
             }
-            return client.write(addHeader({ type,success:"success"}));
+            return client.write(addHeader({ type,success:"success",lastHistory:device.lastHistory}));
           case "updateDevice":
             var deviceID = clients[indexClient(client)].deviceID ;
             if(deviceID){
               await DeviceState.updateOne(
                 { deviceID },
                 {
-                    $set: { deviceState: data.deviceState }
+                    $set: { deviceState: data.deviceState ,lastUpdate:new Date(new Date().getTime()+1000*60*60*8)}
                 }
               );
             }
             break;
           case "addHistoryData":
               await new History({...data.history,quickV:data.history.fastTime,deviceID:data.deviceID}).save();
+            break;
+          case "addLastHistoryData":
+            var deviceID = data.deviceID;
+            var device = await DeviceState.findOne({deviceID});
+            var newHistoryTime =  new Date(new Date(data.historyDatas[data.historyDatas.length-1].time).getTime()+1000*60*60*8);
+            
+            data.historyDatas.forEach(element => {
+              element.time = new Date(new Date(element.time).getTime()+1000*60*60*8);
+              element['deviceID'] = deviceID
+            });
+            data.historyDatas.reverse();
+            if(device.lastHistory<newHistoryTime){
+              await DeviceState.updateOne(
+                { deviceID },
+                {
+                    $set: { lastHistory: newHistoryTime.toString() }
+                }
+              );              
+            }
+            await History.insertMany(
+              [
+                ...data.historyDatas
+              ]
+            )
+            console.log('addLastHistoryData',newHistoryTime);
             break;
           case "updateParma":
             var deviceID = clients[indexClient(client)].deviceID ;

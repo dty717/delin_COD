@@ -187,6 +187,13 @@ const paramSchema = new mongoose.Schema({
     高浓度_临界值:{type:Number,required:true},
     高浓度_快速体积:{type:Number,required:true},
     高浓度_最大体积:{type:Number,required:true},
+
+    等待时间:{type:Number,required:true},
+    上传服务器地址:{type:String,required:true},
+    上传服务器端口:{type:String,required:true},
+    username:{type:String,required:true},
+    password:{type:String,required:true},
+    token:{type:String,required:true}
 })
 
 mongoose.model('Param',paramSchema);
