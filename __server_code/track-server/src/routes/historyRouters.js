@@ -51,9 +51,9 @@ router.get('/updateDevice',async(req,res)=>{
 router.all('/Historys', async (req, res) => {
   //const tracks = await History.find({ userId: req.user._id });
   try {
-    var { deviceID, time } = req.body;
+    var { deviceID} = req.body;
     console.log(req.body)
-    const results = await History.find( { time: { $lt: new Date(time)},deviceID }).limit(20);
+    const results = await History.find( { time: { $lt:  new Date(new Date().getTime()+1000*60*60*8)},deviceID }).sort( { "time": -1 } ).limit(10);
     res.send(results);
   } catch (err) {
     res.status(422).send({ error: err.message });

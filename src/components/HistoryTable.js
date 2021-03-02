@@ -7,7 +7,6 @@ import SingleData from './SingleData'
 
 
 const HistoryTable = ({list})=>{
-    console.log(list);
     return (
         <View style={{flex:1}}>
         <Text h1>历史数据</Text>

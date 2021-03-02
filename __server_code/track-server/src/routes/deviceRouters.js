@@ -52,6 +52,8 @@ router.all('/controlDevice', async (req, res) => {
 
 router.get('/getDeviceState', async (req, res) => {
     var deviceID = "COD_A_00001";
+    console.log("getDeviceState")
+
     var tem = await DeviceState.find({
         deviceID
     });

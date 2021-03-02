@@ -409,7 +409,6 @@ const ParamReducer = (state, action) => {
             storage.setItem('@param',JSON.stringify(_state));
             return _state;
         case 'uploadParamData':
-            console.log(_state)
             var _state = action.payload;
             //storage.setItem('@param',JSON.stringify(action.payload));
             return _state;

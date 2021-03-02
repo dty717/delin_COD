@@ -72,7 +72,7 @@ server.on('error', (err) => {
   //deleteItem(c);
   //throw err;
 });
-//server.address("127.0.0.1")
+
 server.listen(8880, () => {
   console.log('server bound');
 });
@@ -163,16 +163,18 @@ const handleClient = async (type,data,client)=>{
             if(device.length == 0){
               return client.write(addHeader({ type,error:"device not register"}));
             }
-            return client.write(addHeader({ type,success:"success",lastHistory:device.lastHistory}));
+            return client.write(addHeader({ type,success:"success",lastHistory:device.lastHistory,lastUpdate:device.lastUpdate}));
           case "updateDevice":
             var deviceID = clients[indexClient(client)].deviceID ;
             if(deviceID){
-              await DeviceState.updateOne(
-                { deviceID },
-                {
-                    $set: { deviceState: data.deviceState ,lastUpdate:new Date(new Date().getTime()+1000*60*60*8)}
-                }
-              );
+              if(data.deviceState&&(data.deviceState.length>0)){
+                await DeviceState.updateOne(
+                  { deviceID },
+                  {
+                      $set: { deviceState: data.deviceState ,lastUpdate:new Date(new Date().getTime()+1000*60*60*8)}
+                  }
+                );
+              }
             }
             break;
           case "addHistoryData":
@@ -215,7 +217,6 @@ const handleClient = async (type,data,client)=>{
               }
               break;
             case "control":
-
               if(data.state == 'success'){
                 clients[indexClient(client)].control = false; 
               }

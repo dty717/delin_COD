@@ -21,13 +21,7 @@ if(typeof AsyncStorage=='undefined'){
 
 var index =0;
 var _updateDeviceData;
-setInterval(async()=>{
-    if(_updateDeviceData){
-        const response = await trackerApi.get('/getDeviceState');
-        _updateDeviceData(response.data.deviceState);
-        
-    }
-},5000)
+var updateDeviceTimer = 0
 
 const ResolveAuthScreen = ()=>{
     const {tryLocalSignin} = useContext(AuthContext);
@@ -46,10 +40,16 @@ const ResolveAuthScreen = ()=>{
             //     measurementId: "G-2W2MN0E83B"
             //   })
             initParam(e);
-            getParamData("COD_A_00001");    
+            getParamData("COD_A_00001");
+            clearInterval(updateDeviceTimer)
+            updateDeviceTimer = setInterval(async()=>{
+                // if(_updateDeviceData){
+                const response = await trackerApi.get('/getDeviceState');
+                updateDeviceData(response.data.deviceState);
+                // }
+            },5000)
             tryLocalSignin();
         });
-        
         _updateDeviceData = updateDeviceData;
     },[]);
     return null;

@@ -13,7 +13,6 @@ import {Context as DeviceContext }from '../context/DeviceContext'
 const DeviceInfoScreen = () => {
     var list = [1, 2, 3, 4, 1, 2, 3, 41, 2, 3, 41, 2, 3, 41, 2, 3, 41, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 41, 2, 3, 41, 2, 3, 41, 2, 3, 41, 2, 3, 41, 2, 3, 4, 1, 2, 3, 41, 2, 3, 41, 2, 3, 41, 2, 3, 41, 2, 3, 41, 2, 3, 4, 1, 2, 3, 41, 2, 3, 41, 2, 3, 41, 2, 3, 41, 2, 3, 4]
     const {state} = useContext(DeviceContext);
-    console.log(state)
     return (
         <SafeAreaView forceInset={{ top: 'always' }} style={{ flex: 1 }}>
             <DeviceStateDate index="名称" val="状态" header={true}>
