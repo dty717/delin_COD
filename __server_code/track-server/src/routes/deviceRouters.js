@@ -35,18 +35,21 @@ router.all('/controlDevice', async (req, res) => {
         case -2:
             res.send("{\"state\":\"设备连接忙碌\"}");
             break;
+        default:
+            res.send({ state: "success" })
+            break
     }
     
-    var times = 8;
-    while(times--){
-        sendState = getClientState(deviceID,"control");
-        if(sendState>=0){
-            res.send("{\"state\":\"设置成功\"}");
-            break;
-        }
-        await sleep(500);
-    }
-    res.send("{\"state\":\"设备未反应\"}");
+    // var times = 8;
+    // while(times--){
+    //     sendState = getClientState(deviceID,"control");
+    //     if(sendState>=0){
+    //         res.send("{\"state\":\"设置成功\"}");
+    //         break;
+    //     }
+    //     await sleep(500);
+    // }
+    // res.send("{\"state\":\"设备未反应\"}");
 })
 
 

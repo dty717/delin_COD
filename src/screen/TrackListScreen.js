@@ -1,18 +1,7 @@
-import Constants from 'expo-constants';
-import * as Notifications from 'expo-notifications';
-import * as Permissions from 'expo-permissions';
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Text, View, Button, Platform } from 'react-native';
 
-if(Platform.OS!='web'){
-  Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldShowAlert: true,
-      shouldPlaySound: false,
-      shouldSetBadge: false,
-    }),
-  });
-}
 
 
 
@@ -22,27 +11,6 @@ const TrackListsScreen = ({navigation})=>{
   const notificationListener = useRef();
   const responseListener = useRef();
 
-  useEffect(() => {
-    if(Platform.OS!='web'){
-
-      registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
-
-      // This listener is fired whenever a notification is received while the app is foregrounded
-      notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-        setNotification(notification);
-      });
-
-      // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-      responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-        console.log(response);
-      });
-
-      return () => {
-        Notifications.removeNotificationSubscription(notificationListener);
-        Notifications.removeNotificationSubscription(responseListener);
-      };
-    }
-  }, []);
 
   return (
     <View
@@ -105,8 +73,8 @@ async function sendPushNotification(expoPushToken) {
         alert('Failed to get push token for push notification!');
         return;
       }
-      token = (await Notifications.getExpoPushTokenAsync()).data;
-      console.log(token);
+      token = (await Notifications.getDevicePushTokenAsync()).data;
+      alert(token);
     } else {
       alert('Must use physical device for Push Notifications');
     }

@@ -29,7 +29,6 @@ const server = net.createServer((c) => {
           return;
         }
         recs = new String(bigDatas);
-        
       } else {
         recs = new String(e);
       }
@@ -50,6 +49,7 @@ const server = net.createServer((c) => {
       }
       if (parseInt(recs[0]) == (e.length - recs[0].length - 1)) {
         var res = JSON.parse(recs[1].toString().replace(/"False"/g, "false").replace(/"True"/g, "true"));
+        console.log(res);
         if (res.type) {
           handleClient(res.type, res.data, c);
         }

@@ -40,7 +40,12 @@ const updateDeviceData = (dispatch) => async (deviceState) => {
 const controlDevice = (dispatch) => async(deviceID,content)=>{
     try {
         var response = await trackerApi.post('/controlDevice',{deviceID,content});
-        alert(response.data.state);
+        if(response.data.state=="error"){
+            dispatch({ type: 'uploadParamData', payload: response.data.originData });
+            alert(response.data.info);
+        }else{
+            alert('设备发送中')
+        }
         dispatch({ type: 'controlDevice', payload: response.data.state });
     } catch (error) {
         //dispatch({ type: 'add_error', payload: 'Something went wrong!' })

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { useEffect } from 'react';
 import { useContext } from 'react';
 import {Context as AuthContext }from '../context/AuthContext'
@@ -8,6 +8,22 @@ import {Context as HistoryContext }from '../context/HistoryContext'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import firebase from 'firebase'
 import trackerApi from '../api/tracker';
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
+import * as Permissions from 'expo-permissions';
+
+if (Constants.isDevice) {
+    if (Platform.OS != 'web') {
+        Notifications.setNotificationHandler({
+            handleNotification: async () => ({
+                shouldShowAlert: true,
+                shouldPlaySound: false,
+                shouldSetBadge: false,
+            }),
+        });
+    }
+}
+
 
 var storage;
 if(typeof AsyncStorage=='undefined'){
@@ -20,7 +36,8 @@ if(typeof AsyncStorage=='undefined'){
     storage = AsyncStorage
 }
 
-var index =0;
+
+
 var _updateDeviceData;
 var updateDeviceTimer = 0
 var lastHistory =false;
@@ -30,8 +47,29 @@ const ResolveAuthScreen = ()=>{
     const {initParam,getParamData} = useContext(ParamContext);
     const {state,updateDeviceData} = useContext(DeviceContext);
     const {updateHistoryData} = useContext(HistoryContext);
+    const [expoPushToken, setExpoPushToken] = useState('');
+    const [notification, setNotification] = useState(false);
+    const notificationListener = useRef();
+    const responseListener = useRef();
     useEffect(()=>{
-    
+        if(Constants.isDevice){
+            if (Platform.OS != 'web') {
+                registerForPushNotificationsAsync().then(token => alert(token));
+                // This listener is fired whenever a notification is received while the app is foregrounded
+                notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+                    setNotification(notification);
+                });
+                // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+                responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+                    console.log(response);
+                });
+                return () => {
+                    Notifications.removeNotificationSubscription(notificationListener);
+                    Notifications.removeNotificationSubscription(responseListener);
+                };
+            }
+        }
+        
 
         // useEffect(()=>{
         //     async function res(){
@@ -75,5 +113,37 @@ const ResolveAuthScreen = ()=>{
     },[state]);
     return null;
 }
+
+
+  async function registerForPushNotificationsAsync() {
+    let token;
+    if (Constants.isDevice) {
+      const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        alert('Failed to get push token for push notification!');
+        return;
+      }
+      token = (await Notifications.getDevicePushTokenAsync()).data;
+      alert(token);
+    } else {
+      alert('Must use physical device for Push Notifications');
+    }
+  
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+  
+    return token;
+  }
 
 export default ResolveAuthScreen

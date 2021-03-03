@@ -155,7 +155,7 @@ const DeviceControlScreen = () => {
                                     param.uploadParamData(deviceID, "采样运行模式", e); 
                                 })
                         }}
-                        style={{ width: 160, marginHorizontal: 40, borderWidth: 1 }}
+                        style={{ height: 50, width: 150, marginHorizontal: 40, borderWidth: 1 }}
                         mode="dropdown">
                         <Picker.Item label="低浓度" value={0} />
                         <Picker.Item label="高浓度" value={1} />
