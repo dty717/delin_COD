@@ -409,7 +409,7 @@ const ParamReducer = (state, action) => {
             storage.setItem('@param',JSON.stringify(_state));
             return _state;
         case 'uploadParamData':
-            var _state = action.payload;
+            var _state = {...state,...action.payload};
             //storage.setItem('@param',JSON.stringify(action.payload));
             return _state;
         case 'initParam':
@@ -423,7 +423,7 @@ const ParamReducer = (state, action) => {
 const updateParamData = (dispatch)=>async(deviceID,key,value)=>{
     try {
         //trackerApi.post('/updateParamData',{deviceID,key,value});
-        dispatch({ type: 'updateParamData', payload: {key,value} });
+        dispatch({ type: 'updateParamData', payload: {key,value}});
     } catch (error) {
         //dispatch({ type: 'add_error', payload: 'Something went wrong!' })
     }
@@ -432,7 +432,13 @@ const updateParamData = (dispatch)=>async(deviceID,key,value)=>{
 const uploadParamData = (dispatch)=>async(deviceID,key,value)=>{
     try {
         var response = await trackerApi.post('/uploadParamData',{deviceID,key,value});
-        dispatch({ type: 'uploadParamData', payload: response.data });
+        if(response.data.state=="error"){
+            dispatch({ type: 'uploadParamData', payload: response.data.originData });
+            alert(response.data.info);
+        }else{
+            alert('设备发送中')
+        }
+        // dispatch({ type: 'uploadParamData', payload: response.data });
     } catch (error) {
         //dispatch({ type: 'add_error', payload: 'Something went wrong!' })
     }

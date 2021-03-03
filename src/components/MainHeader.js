@@ -5,12 +5,12 @@ import { Button, Text } from 'react-native-elements'
 const MainHeader = ({text1,textChange1,text2,textChange2,text3,textChange3})=>{
     
     return (
-        <View>
+        <View style = {{flex:1}}>
         <View style={styles.row}>
             <View style = {styles.text}>
                 <Text style={{fontSize:18}}>状态</Text>
             </View>
-            <TextInput  style={styles.textInput} value = {text1} onChangeText = {textChange1}/>
+            <Text  style={styles.textInput} onChangeText = {textChange1}>{text1}</Text>
             <View style = {styles.text2}>
                 <Text style={{fontSize:18}}></Text>
             </View>
@@ -19,7 +19,7 @@ const MainHeader = ({text1,textChange1,text2,textChange2,text3,textChange3})=>{
             <View style = {styles.text}>
                 <Text style={{fontSize:18}}>滴定数据</Text>
             </View>
-            <TextInput  style={styles.textInput}  value = {text2} onChangeText = {textChange2}/>
+            <Text  style={styles.textInput} onChangeText = {textChange2}>{text2}</Text>
             <View style = {styles.text2}>
                 <Text style={{fontSize:18}}>mg/L</Text>
             </View>
@@ -28,7 +28,7 @@ const MainHeader = ({text1,textChange1,text2,textChange2,text3,textChange3})=>{
             <View style = {styles.text}>
                 <Text style={{fontSize:18}}>蒸馏水光电压</Text>
             </View>
-            <TextInput  style={styles.textInput}  value = {text3} onChangeText = {textChange3}/>
+            <Text  style={styles.textInput}  onChangeText = {textChange3}>{text3}</Text>
             <View style = {styles.text2}>
                 <Text style={{fontSize:18}}></Text>
             </View>
@@ -45,6 +45,7 @@ const styles=StyleSheet.create({
         justifyContent:'flex-start',
         textAlignVertical:'center',
         marginHorizontal:20,
+
         flex:5
     },
     text2:{

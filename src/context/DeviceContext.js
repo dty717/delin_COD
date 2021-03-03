@@ -18,7 +18,7 @@ if(typeof AsyncStorage=='undefined'){
 const DeviceReducer = (state,action)=>{
     switch(action.type){
         case 'updateDeviceData':
-            return {...state,deviceState:action.payload.deviceState};
+            return {...state,...action.payload};
         case 'add_error':
             return{...state,errorMessage:action.payload}
         case 'clear_error_message':
@@ -32,7 +32,7 @@ const DeviceReducer = (state,action)=>{
 
 const updateDeviceData = (dispatch) => async (deviceState) => {
     try {
-        dispatch({ type: 'updateDeviceData', payload: {deviceState} });
+        dispatch({ type: 'updateDeviceData', payload: deviceState });
     } catch (error) {
         //dispatch({ type: 'add_error', payload: 'Something went wrong!' })
     }
@@ -50,5 +50,5 @@ const controlDevice = (dispatch) => async(deviceID,content)=>{
 export const {Provider,Context} = createDataContext(
     DeviceReducer,
     {updateDeviceData,controlDevice},
-    {data:{dataFlow1:["1,1","2,2","3,3"],dataFlow2:["1,1","2,2","3,3"],dataFlow3:["1,1","2,2","3,3"]},deviceState:[]}
+    {data:{dataFlow1:["1,1","2,2","3,3"],dataFlow2:["1,1","2,2","3,3"],dataFlow3:["1,1","2,2","3,3"]},deviceState:[],lastUpdate:false,lastHistory:false,lastParam:false}
 )

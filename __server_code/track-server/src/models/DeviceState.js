@@ -16,6 +16,9 @@ const deviceStateSchema = new mongoose.Schema({
     },
     lastUpdate:{
         type:Date
+    },
+    lastParam:{
+        type:Date
     }
 })
 

@@ -12,7 +12,7 @@ const AccountScreen = ()=>{
         <SafeAreaView forceInset={{top:'always'}} style={{flex:1,justifyContent:'center'}}>
             <Spacer>
                 <Text style={{fontSize:48,marginBottom:60,textAlign:"center"}}>账号</Text>
-                <Button title="Sign out" onPress = {signout} />
+                <Button title="退出登录" onPress = {signout} />
             </Spacer>
         </SafeAreaView>
     )

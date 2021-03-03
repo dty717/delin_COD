@@ -4,7 +4,7 @@ const DeviceState = mongoose.model('DeviceState');
 
 const router = express.Router();
 
-const  {clients,send,sleep,getClientState} = require('../middlewares/server')
+const  {clients,send,sleep,getClientStateInfo} = require('../middlewares/server')
 
 router.get('/device', async (req, res) => {
     console.log(clients.length)
@@ -27,7 +27,7 @@ router.get('/setDeviceState', async (req, res) => {
 
 router.all('/controlDevice', async (req, res) => {
     var { deviceID,content} = req.body;
-    var sendState = send(deviceID,"control",content);
+    var sendState = send(deviceID,"control",{content});
     switch(sendState){
         case -1:
             res.send("{\"state\":\"设备未连接\"}");
@@ -52,13 +52,14 @@ router.all('/controlDevice', async (req, res) => {
 
 router.get('/getDeviceState', async (req, res) => {
     var deviceID = "COD_A_00001";
-    console.log("getDeviceState")
 
     var tem = await DeviceState.find({
         deviceID
     });
-    if(tem.length>0)
-        res.send(tem[0]);
+
+    if(tem.length>0){
+        res.send({...tem[0].toObject(),...getClientStateInfo(deviceID)});
+    }
     else{
         res.send("{\"state\":\"error\"}");
     }

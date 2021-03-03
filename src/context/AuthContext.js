@@ -77,7 +77,7 @@ const tryLocalSignin = (dispatch)=>async()=>{
     token = JSON.stringify(token);
     if((token)&&(token.toLowerCase()!="null")&&(token.toLowerCase()!="undefined")){
         dispatch({type:'signin',payload:token});
-        navigate('设备信息')
+        navigate('主页')
     }else{
         navigate('loginFlow')
     }

@@ -22,22 +22,25 @@ router.all('/Params', async (req, res) => {
 router.all('/uploadParamData',async(req,res)=>{
   try {
     var { deviceID,key,value} = req.body;
-    var data = {};
-    data[key]=value;
-    
-    
-    var { deviceID,content} = req.body;
-    send(deviceID,"set",key+":"+value);
-    
-    //console.log(data);
-    await Param.updateOne(
-        { deviceID },
-        {
-            $set: data
-        }
-    );
-    const results = await Param.findOne( {deviceID });
-    res.send(results);
+    console.log(value+"")
+    value = (value+"").replace(/false/g, "False").replace(/true/g, "True");
+    var sendState = send(deviceID,"set",{key,value});
+    var originData = {};
+    if(sendState==-1||(sendState==-2)){
+      const results = await Param.findOne( {deviceID });
+      originData[key] = results[key];
+    }
+    switch (sendState) {
+      case -1:
+        res.send({state:"error",info:"设备未连接",originData});
+        break;
+      case -2:
+        res.send({state:"error",info:"设备繁忙",originData});
+        break;
+      default:
+        res.send({ state: "success" })
+        break
+    }
   } catch (err) {
     res.status(422).send({ error: err.message });
   }
