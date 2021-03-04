@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "865920726070",
+    "project_id": "delincod",
+    "storage_bucket": "delincod.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:865920726070:android:2362cafcc6f65bef549497",
+        "android_client_info": {
+          "package_name": "org.dty.delinCOD"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "865920726070-fa394h2ngt6vf2419s3h00qct9fbl699.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUMAdEaj6N61yTbLeI4p_xcox5bJRTgh0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "865920726070-fa394h2ngt6vf2419s3h00qct9fbl699.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

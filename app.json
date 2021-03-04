@@ -1,15 +1,17 @@
 {
-  "name": "delin_COD",
-  "displayName": "delin_COD",
+  "name": "project",
+  "displayName": "project",
   "expo": {
-    "name": "delin_COD",
-    "slug": "delin_COD",
+    "name": "project",
+    "slug": "project",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
     ],
     "android": {
-      "useNextNotificationsApi": true
+      "useNextNotificationsApi": true,
+      "googleServicesFile": "./google-services.json",
+      "package": "com.dty717.project"
     }
   }
 }

@@ -1,5 +1,5 @@
-const jwt = require("jsonwebtoken");
-const authorizationToken = jwt.sign(
+var jwt = require("jsonwebtoken");
+var authorizationToken = jwt.sign(
   {
     iss: "FZZVSRYRV4",
     iat: Math.round(new Date().getTime() / 1000),
@@ -12,17 +12,17 @@ const authorizationToken = jwt.sign(
     },
   }
 );
-const http2 = require('http2');
-
-const client = http2.connect(
+var http2 = require('http2');
+IS_PRODUCTION = true
+var client = http2.connect(
   IS_PRODUCTION ? 'https://api.push.apple.com' : 'https://api.sandbox.push.apple.com'
 );
 
-const request = client.request({
+var request = client.request({
   ':method': 'POST',
   ':scheme': 'https',
-  'apns-topic': 'YOUR-BUNDLE-IDENTIFIER',
-  ':path': '/3/device/' + nativeDeviceToken, // This is the native device token you grabbed client-side
+  'apns-topic': 'org.dty.delinCOD',
+  ':path': '/3/device/' +  "6dbbe9c9da2c82219544a739dda62d09219a3cffb1cf76e8409a45b6ee1080d5", // This is the native device token you grabbed client-side
   authorization: `bearer ${authorizationToken}`, // This is the JSON web token we generated in the "Authorization" step above
 });
 request.setEncoding('utf8');
@@ -31,7 +31,7 @@ request.write(
   JSON.stringify({
     aps: {
       alert: {
-        title: "\uD83D\uDCE7 You've got mail!",
+        title: "\uD83D\uDCE7 You've got mail!!!!",
         body: 'Hello world! \uD83C\uDF10',
       },
     },
@@ -39,3 +39,4 @@ request.write(
   })
 );
 request.end();
+
