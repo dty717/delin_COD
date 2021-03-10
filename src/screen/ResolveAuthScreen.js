@@ -5,7 +5,7 @@ import {Context as AuthContext }from '../context/AuthContext'
 import {Context as ParamContext }from '../context/ParamContext'
 import {Context as DeviceContext }from '../context/DeviceContext'
 import {Context as HistoryContext }from '../context/HistoryContext'
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AsyncStorage } from 'react-native';
 import firebase from 'firebase'
 import trackerApi from '../api/tracker';
 import * as Notifications from 'expo-notifications';
@@ -13,7 +13,7 @@ import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 
 if (Constants.isDevice) {
-    if (Platform.OS != 'web') {
+    if (Platform.OS == 'ios') {
         Notifications.setNotificationHandler({
             handleNotification: async () => ({
                 shouldShowAlert: true,
@@ -53,7 +53,7 @@ const ResolveAuthScreen = ()=>{
     const responseListener = useRef();
     useEffect(()=>{
         if(Constants.isDevice){
-            if (Platform.OS != 'web') {
+            if (Platform.OS == 'ios') {
                 registerForPushNotificationsAsync().then(token => alert(token));
                 // This listener is fired whenever a notification is received while the app is foregrounded
                 notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
@@ -81,8 +81,8 @@ const ResolveAuthScreen = ()=>{
         var deviceID = "COD_A_00001";
         var time = new Date();
         updateHistoryData("COD_A_00001",time);
-
-        storage.getItem("@param").then(e=>{
+        
+        storage.getItem("@param",(err,res)=>{
             // firebase.initializeApp({
             //     apiKey: "AIzaSyBhWBoxP-CsBV_PbD0iH68w9-5V6W87x04",
             //     authDomain: "delincod.firebaseapp.com",
@@ -92,7 +92,7 @@ const ResolveAuthScreen = ()=>{
             //     appId: "1:865920726070:web:52d64e086642a7b6549497",
             //     measurementId: "G-2W2MN0E83B"
             //   })
-            initParam(e);
+            initParam(res);
             getParamData("COD_A_00001");
             clearInterval(updateDeviceTimer)
             updateDeviceTimer = setInterval(async()=>{
@@ -108,7 +108,7 @@ const ResolveAuthScreen = ()=>{
                 updateDeviceData(response.data);
             },5000)
             tryLocalSignin();
-        },[]);
+        });
         _updateDeviceData = updateDeviceData;
     },[state]);
     return null;

@@ -2,7 +2,7 @@ import trackerApi from '../api/tracker';
 import createDataContext from './createDataContext'
 import "../navigationRef"
 import { navigate } from '../navigationRef';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AsyncStorage } from 'react-native';
 
 var storage;
 if(typeof AsyncStorage=='undefined'){
@@ -54,7 +54,6 @@ const signin = (dispatch)=> async ({ username, password }) => {
             '@token',
             response.data.token
         );
-        const token2 =JSON.stringify(await storage.getItem('@token'));
         dispatch({ type: 'signin', payload: response.data.token})
         navigate('主页');
     } catch (error) {

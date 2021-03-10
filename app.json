@@ -11,6 +11,9 @@
     "android": {
       "useNextNotificationsApi": true,
       "package": "com.dty717.project"
+    },
+    "ios": {
+      "bundleIdentifier": "com.dty717.project"
     }
   }
 }

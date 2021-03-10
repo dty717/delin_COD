@@ -2,7 +2,7 @@ import trackerApi from '../api/tracker';
 import createDataContext from './createDataContext'
 import "../navigationRef"
 import { navigate } from '../navigationRef';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AsyncStorage } from 'react-native';
 
 var storage;
 if(typeof AsyncStorage=='undefined'){
@@ -395,17 +395,20 @@ const _type = {
 const ParamReducer = (state, action) => {
     switch (action.type) {
         case 'getParamData':
-            storage.setItem('@param',JSON.stringify(action.payload));
             var _state = action.payload;
+            _state['valid'] = true;
+            storage.setItem('@param',JSON.stringify(_state));
             return _state;
         case 'updateParamData':
             var _state = { ...state };
             _state[action.payload.key] = action.payload.value;
-            //storage.setItem('@param',JSON.stringify(_state));
+            _state['valid'] = true;
+            storage.setItem('@param',JSON.stringify(_state));
             return _state;
         case 'toggleParamData':
             var _state = { ...state };
             _state[action.payload] = !_state[action.payload];
+            _state['valid'] = true;
             storage.setItem('@param',JSON.stringify(_state));
             return _state;
         case 'uploadParamData':
@@ -474,5 +477,6 @@ const initParam = (dispatch) => async(val)=>{
 
 export const { Provider, Context } = createDataContext(
     ParamReducer,
-    { toggleParamData, getParamData ,initParam,updateParamData,uploadParamData}
+    { toggleParamData, getParamData ,initParam,updateParamData,uploadParamData},
+    {}
 )   

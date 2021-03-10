@@ -2,7 +2,7 @@ import trackerApi from '../api/tracker';
 import createDataContext from './createDataContext'
 import "../navigationRef"
 import { navigate } from '../navigationRef';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AsyncStorage } from 'react-native';
 
 var storage;
 if(typeof AsyncStorage=='undefined'){

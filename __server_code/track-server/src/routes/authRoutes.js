@@ -9,6 +9,11 @@ router.get('/test', (req, res) => {
   res.send("123test");
 });
 
+router.all('/phoneInfo',(req,res)=>{
+  console.log(req.body);
+  res.status(200).send("phoneInfo");
+})
+
 router.post('/signup', async (req, res) => {
   const { username, password } = req.body;
 
