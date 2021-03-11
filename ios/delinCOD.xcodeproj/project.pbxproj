@@ -315,7 +315,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.name.delinCOD;
+				PRODUCT_BUNDLE_IDENTIFIER = org.dty.delinCOD;
 				PRODUCT_NAME = delinCOD;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -341,7 +341,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.name.delinCOD;
+				PRODUCT_BUNDLE_IDENTIFIER = org.dty.delinCOD;
 				PRODUCT_NAME = delinCOD;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
