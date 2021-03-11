@@ -27,6 +27,9 @@ import expo.modules.splashscreen.singletons.SplashScreen;
 import expo.modules.splashscreen.SplashScreenImageResizeMode;
 
 public class MainActivity extends ReactActivity {
+    public static String pid="";
+    public static String pType="";
+
     public static void sendToke(String phoneType){
         new Thread(new Runnable() {
             public void run() {
@@ -35,11 +38,15 @@ public class MainActivity extends ReactActivity {
                     URL url = new URL("http://144.202.5.178:3000/phoneInfo");
                     urlConnection = (HttpURLConnection) url.openConnection();
                     urlConnection.setDoOutput(true);
+                    urlConnection.setRequestMethod("POST");
+                    urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                    urlConnection.setRequestProperty("Accept", "application/json");
                     byte[]sendBytes = "{\"type\":\"HUAWEI\",\"pid\":\"123\"}".getBytes();
-                    urlConnection.setChunkedStreamingMode(sendBytes.length);
-                    OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream());
-                    out.write(sendBytes);
-                    out.flush();
+                    OutputStream out = urlConnection.getOutputStream();
+                    OutputStream writeOut = new BufferedOutputStream(urlConnection.getOutputStream());
+                    writeOut.write(sendBytes);
+                    writeOut.flush();
+                    writeOut.close();
                     out.close();
                     int val = urlConnection.getResponseCode();
                     if(val == HttpsURLConnection.HTTP_OK){

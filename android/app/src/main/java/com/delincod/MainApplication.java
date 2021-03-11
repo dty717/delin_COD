@@ -66,6 +66,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       List<ReactPackage> packages = new PackageList(this).getPackages();
       packages.add(new ModuleRegistryAdapter(mModuleRegistryProvider));
+      packages.add(new MyAppPackage());
       return packages;
     }
 
@@ -101,10 +102,7 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
-    if(true){
-      MainActivity.sendToke("123");
-      return;
-    }
+
     SoLoader.init(this, /* native exopackage */ false);
 // 注册push服务，注册成功后会向DemoMessageReceiver发送广播
     // 可以从DemoMessageReceiver的onCommandResult方法中MiPushCommandMessage对象参数中获取注册信息

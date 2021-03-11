@@ -37,6 +37,7 @@ if(typeof AsyncStorage=='undefined'){
 }
 
 
+var {getLoginState} = require('../common/config');
 
 var _updateDeviceData;
 var updateDeviceTimer = 0
@@ -63,10 +64,6 @@ const ResolveAuthScreen = ()=>{
                 responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
                     console.log(response);
                 });
-                return () => {
-                    Notifications.removeNotificationSubscription(notificationListener);
-                    Notifications.removeNotificationSubscription(responseListener);
-                };
             }
         }
         
@@ -93,9 +90,12 @@ const ResolveAuthScreen = ()=>{
             //     measurementId: "G-2W2MN0E83B"
             //   })
             initParam(res);
-            getParamData("COD_A_00001");
+            //getParamData("COD_A_00001");
             clearInterval(updateDeviceTimer)
             updateDeviceTimer = setInterval(async()=>{
+                if(!getLoginState()){
+                  return
+                }
                 const response = await trackerApi.get('/getDeviceState');
                 if(lastParam<response.data.lastParam){
                     getParamData("COD_A_00001");
