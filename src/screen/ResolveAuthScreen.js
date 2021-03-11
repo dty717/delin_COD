@@ -37,7 +37,7 @@ if(typeof AsyncStorage=='undefined'){
 }
 
 
-var {getLoginState} = require('../common/config');
+var {getLoginState,setPid_And_PTtye} = require('../common/config');
 
 var _updateDeviceData;
 var updateDeviceTimer = 0
@@ -55,7 +55,9 @@ const ResolveAuthScreen = ()=>{
     useEffect(()=>{
         if(Constants.isDevice){
             if (Platform.OS == 'ios') {
-                registerForPushNotificationsAsync().then(token => alert(token));
+                registerForPushNotificationsAsync().then(token => {
+                  setPid_And_PTtye(token,"ios")
+                });
                 // This listener is fired whenever a notification is received while the app is foregrounded
                 notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
                     setNotification(notification);

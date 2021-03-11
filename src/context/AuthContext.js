@@ -3,7 +3,7 @@ import createDataContext from './createDataContext'
 import "../navigationRef"
 import { navigate } from '../navigationRef';
 import { AsyncStorage } from 'react-native';
-var  {setLoginState} = require('../common/config')
+var  {setLoginState,setPid_And_PTtye,getPid_And_PTtye} = require('../common/config')
 
 var storage;
 if(typeof AsyncStorage=='undefined'){
@@ -20,14 +20,11 @@ import { NativeModules } from 'react-native';
 
 const { TokenModule } = NativeModules;
 
-var pid = "";
-var pType = "";
 if(TokenModule){
   var constants = TokenModule.getConstants();
   if(constants){
     if(constants.pid&&constants.pType){
-      pid = constants.pid;
-      pType = constants.pType;
+        setPid_And_PTtye(constants.pid,constants.pType)
     }
   }
 }
@@ -51,6 +48,7 @@ const authReducer = (state,action)=>{
 
 const signup = (dispatch) => async ({ username, password }) => {
     try {
+        var  {pid,pType}= getPid_And_PTtye();
         const response = await trackerApi.post('/signup', { username, password,pid,pType });
         await storage.setItem(
             '@token',
@@ -67,6 +65,7 @@ const signup = (dispatch) => async ({ username, password }) => {
 
 const signin = (dispatch)=> async ({ username, password }) => {
     try {
+        var  {pid,pType}= getPid_And_PTtye();
         const response = await trackerApi.post('/signin', { username, password,pid,pType});
         await storage.setItem(
             '@token',
@@ -102,6 +101,7 @@ const tryLocalSignin = (dispatch)=>async()=>{
         navigate('loginFlow')
     }
 }
+
 
 
 export const {Provider,Context} = createDataContext(
