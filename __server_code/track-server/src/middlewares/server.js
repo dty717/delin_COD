@@ -33,7 +33,7 @@ const server = net.createServer((c) => {
         recs = new String(e);
       }
 
-      var indexSplit = recs.indexOf(':')
+      var indexSplit = recs.indexOf('~')
       if (indexSplit != -1) {
         recs = [recs.substring(0, indexSplit), recs.substring(indexSplit + 1)];
       }
@@ -47,9 +47,9 @@ const server = net.createServer((c) => {
           return;
         }
       }
+
       if (parseInt(recs[0]) == (e.length - recs[0].length - 1)) {
         var res = JSON.parse(recs[1].toString().replace(/"False"/g, "false").replace(/"True"/g, "true"));
-        console.log(res);
         if (res.type) {
           handleClient(res.type, res.data, c);
         }
@@ -119,7 +119,7 @@ function getClientStateInfo(deviceID) {
 function addHeader(data) {
   data = JSON.stringify(data);
   var utf8 = unescape(encodeURIComponent(data));
-  return utf8.length + ":" + data;
+  return utf8.length + "~" + data;
 }
 
 function indexClient(c) {
@@ -150,6 +150,7 @@ function deleteItem(c) {
 var clients = [];
 const handleClient = async (type, data, client) => {
   if (type == "login") {
+
     if (!data.username || !data.password) {
       return client.write(addHeader({ type, error: 'Must provide username and password' }));
     }
@@ -161,7 +162,6 @@ const handleClient = async (type, data, client) => {
     try {
       await user.comparePassword(data.password);
       const token = jwt.sign({ userId: user._id }, 'MY_SECRET_KEY');
-      console.log(addHeader({ type, token }))
       return client.write(addHeader({ type, token }));
 
     } catch (err) {
@@ -169,7 +169,6 @@ const handleClient = async (type, data, client) => {
     }
 
   } else if (data.token) {
-
     jwt.verify(data.token, 'MY_SECRET_KEY', async (err, payload) => {
       if (err) {
         return { error: 'You must be logged in.' };
@@ -202,8 +201,12 @@ const handleClient = async (type, data, client) => {
               }
             }
             break;
+          case "warning":
+            console.log("warning",data);
+            break
           case "addHistoryData":
-            await new History({ ...data.history, quickV: data.history.fastTime, deviceID: data.deviceID }).save();
+            console.log("addHistoryData",data)
+            // await new History({ ...data.history, quickV: data.history.fastTime, deviceID: data.deviceID }).save();
             break;
           case "addLastHistoryData":
             var deviceID = data.deviceID;
