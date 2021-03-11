@@ -41,8 +41,8 @@ var {getLoginState,setPid_And_PTtye} = require('../common/config');
 
 var _updateDeviceData;
 var updateDeviceTimer = 0
-var lastHistory =false;
-var lastParam = false;
+var lastHistory =new Date(0);
+var lastParam = new Date(0);
 const ResolveAuthScreen = ()=>{
     const {tryLocalSignin} = useContext(AuthContext);
     const {initParam,getParamData} = useContext(ParamContext);
@@ -78,8 +78,8 @@ const ResolveAuthScreen = ()=>{
         //     //_updateDeviceData(response.data.deviceState);
         // })
         var deviceID = "COD_A_00001";
-        var time = new Date();
-        updateHistoryData("COD_A_00001",time);
+        // var time = new Date();
+        // updateHistoryData("COD_A_00001",time);
         
         storage.getItem("@param",(err,res)=>{
             // firebase.initializeApp({
@@ -99,14 +99,15 @@ const ResolveAuthScreen = ()=>{
                   return
                 }
                 const response = await trackerApi.get('/getDeviceState');
-                if(lastParam<response.data.lastParam){
-                    getParamData("COD_A_00001");
+
+                if(lastParam<new Date(response.data.lastParam)){
+                  getParamData("COD_A_00001");
                 }
-                lastParam = response.data.lastParam
-                if(lastHistory<response.data.lastHistory){
-                    updateHistoryData("COD_A_00001",time);
+                lastParam = new Date(response.data.lastParam)
+                if(lastHistory<new Date(response.data.lastHistory)){
+                    updateHistoryData("COD_A_00001",response.data.lastHistory);
                 }
-                lastHistory=response.data.lastHistory
+                lastHistory=new Date(response.data.lastHistory)
                 updateDeviceData(response.data);
             },5000)
             tryLocalSignin();
@@ -131,7 +132,6 @@ const ResolveAuthScreen = ()=>{
         return;
       }
       token = (await Notifications.getDevicePushTokenAsync()).data;
-      alert(token);
     } else {
       alert('Must use physical device for Push Notifications');
     }
